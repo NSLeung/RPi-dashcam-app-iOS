@@ -20,8 +20,7 @@ class WebRTCClient: NSObject {
     private let peerConnection: RTCPeerConnection
     private let rtcAudioSession =  RTCAudioSession.sharedInstance()
     private let audioQueue = DispatchQueue(label: "audio")
-    private let mediaConstrains = [kRTCMediaConstraintsOfferToReceiveAudio: kRTCMediaConstraintsValueTrue,
-                                   kRTCMediaConstraintsOfferToReceiveVideo: kRTCMediaConstraintsValueTrue]    
+    private let mediaConstraints = [kRTCMediaConstraintsOfferToReceiveVideo: kRTCMediaConstraintsValueTrue]
     private var videoCapturer: RTCVideoCapturer?
     private var localVideoTrack: RTCVideoTrack?
     private var remoteVideoTrack: RTCVideoTrack?
@@ -39,7 +38,6 @@ class WebRTCClient: NSObject {
             mandatoryConstraints: nil,
             optionalConstraints: [
                 "DtlsSrtpKeyAgreement": kRTCMediaConstraintsValueTrue,
-                kRTCMediaConstraintsOfferToReceiveAudio: kRTCMediaConstraintsValueTrue,
                 kRTCMediaConstraintsOfferToReceiveVideo : kRTCMediaConstraintsValueTrue])
         
         guard let peerConnection = WebRTCClient.factory.peerConnection(with: config, constraints: constraints, delegate: nil) else {
@@ -56,9 +54,9 @@ class WebRTCClient: NSObject {
     }
     
     func offer(completion: @escaping (_ sdp: RTCSessionDescription) -> Void) {
-        let constrains = RTCMediaConstraints(mandatoryConstraints: mediaConstrains,
+        let constraints = RTCMediaConstraints(mandatoryConstraints: mediaConstraints,
                                              optionalConstraints: nil)
-        peerConnection.offer(for: constrains) { sdp, error in
+        peerConnection.offer(for: constraints) { sdp, error in
             guard let sdp = sdp else {
                 return
             }
@@ -77,30 +75,30 @@ class WebRTCClient: NSObject {
         peerConnection.add(remoteCandidate, completionHandler: completion)
     }
     
-    func startCaptureLocalVideo(renderer: RTCVideoRenderer) {
-        guard let capturer = self.videoCapturer as? RTCCameraVideoCapturer else {
-            return
-        }
-
-        guard
-            let frontCamera = (RTCCameraVideoCapturer.captureDevices().first { $0.position == .front }),
-        
-            let format = (RTCCameraVideoCapturer.supportedFormats(for: frontCamera).sorted { (f1, f2) -> Bool in
-                let width1 = CMVideoFormatDescriptionGetDimensions(f1.formatDescription).width
-                let width2 = CMVideoFormatDescriptionGetDimensions(f2.formatDescription).width
-                return width1 < width2
-            }).last,
-        
-            let fps = (format.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else {
-            return
-        }
-
-        capturer.startCapture(with: frontCamera,
-                              format: format,
-                              fps: Int(fps.maxFrameRate))
-        
-        localVideoTrack?.add(renderer)
-    }
+//    func startCaptureLocalVideo(renderer: RTCVideoRenderer) {
+//        guard let capturer = self.videoCapturer as? RTCCameraVideoCapturer else {
+//            return
+//        }
+//
+//        guard
+//            let frontCamera = (RTCCameraVideoCapturer.captureDevices().first { $0.position == .front }),
+//        
+//            let format = (RTCCameraVideoCapturer.supportedFormats(for: frontCamera).sorted { (f1, f2) -> Bool in
+//                let width1 = CMVideoFormatDescriptionGetDimensions(f1.formatDescription).width
+//                let width2 = CMVideoFormatDescriptionGetDimensions(f2.formatDescription).width
+//                return width1 < width2
+//            }).last,
+//        
+//            let fps = (format.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else {
+//            return
+//        }
+//
+//        capturer.startCapture(with: frontCamera,
+//                              format: format,
+//                              fps: Int(fps.maxFrameRate))
+//        
+//        localVideoTrack?.add(renderer)
+//    }
     
     func renderRemoteVideo(to renderer: RTCVideoRenderer) {
         remoteVideoTrack?.add(renderer)

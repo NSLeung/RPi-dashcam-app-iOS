@@ -3,7 +3,6 @@ import Combine
 
 class ViewModel: ObservableObject {
     var receiveService = WebRTCReceiveService()
-    var publishService = WebRTCPublishService()
     
     @Published var loggs = [String]()
     private var cancallables = Set<AnyCancellable>()
@@ -23,23 +22,14 @@ class ViewModel: ObservableObject {
             }
         }
         .store(in: &cancallables)
-        
-        publishService.$state.sink { state in
-            if let state = state {
-                self.loggs.append("\(self.now) Publisher: \(state.description)")
-            }
-        }
-        .store(in: &cancallables)
     }
     
     func start() {
         receiveService.startStream()
-        publishService.startStream()
     }
     
     func stop() {
         receiveService.webRTCClient.close()
-        publishService.webRTCClient.close()
     }
 }
 
@@ -48,25 +38,30 @@ struct ContentView: View {
     @ObservedObject var viewModel = ViewModel()
     
     var body: some View {
-        WebRTCReceiveView(client: viewModel.receiveService.webRTCClient)
-            .overlay {
-                VStack {
-                    Spacer()
-                    HStack {
-                        debugView
+        VStack {
+            WebRTCReceiveView(client: viewModel.receiveService.webRTCClient)
+                .overlay {
+                    VStack {
+                        Text("Front").font(.title).foregroundColor(.white)
                         Spacer()
-                        WebRTCPublishView(client: viewModel.publishService.webRTCClient)
-                            .padding()
-                            .padding(.bottom, 50)
-                            .frame(width: 120, height: 200)
-                            .cornerRadius(16)
-                            .shadow(radius: 10)
+                    }
+                    
+                }
+            WebRTCReceiveView(client: viewModel.receiveService.webRTCClient)
+                .overlay {
+                    VStack {
+                        Text("Rear").font(.title).foregroundColor(.white)
+                        Spacer()
+                        HStack {
+                            debugView
+                            Spacer()
+                        }
                     }
                 }
-            }
-            .edgesIgnoringSafeArea(.all)
-            .onAppear(perform: viewModel.start)
-            .onDisappear(perform: viewModel.stop)
+                .edgesIgnoringSafeArea(.all)
+                .onAppear(perform: viewModel.start)
+                .onDisappear(perform: viewModel.stop)
+        }	
     }
     
     var debugView: some View {
@@ -82,4 +77,8 @@ struct ContentView: View {
         .padding()
         .frame(height: 200)
     }
+}
+
+#Preview {
+    ContentView()
 }
