@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -31,6 +31,10 @@
 		6DA189B52CCEA32500BEA946 /* WebRTCClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebRTCClient.swift; sourceTree = "<group>"; };
 		6DA189B62CCEA32500BEA946 /* WebRTCView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebRTCView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		BB098EC52E2E0AA8001D8C2F /* IconAssets */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = IconAssets; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		6DA1899D2CCEA30B00BEA946 /* Frameworks */ = {
@@ -63,6 +67,7 @@
 		6DA189A22CCEA30B00BEA946 /* WebRTC-MediaMTX */ = {
 			isa = PBXGroup;
 			children = (
+				BB098EC52E2E0AA8001D8C2F /* IconAssets */,
 				6DA189B42CCEA32500BEA946 /* Config.swift */,
 				6DA189B32CCEA32500BEA946 /* RTCStates.swift */,
 				6DA189B52CCEA32500BEA946 /* WebRTCClient.swift */,
@@ -98,6 +103,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BB098EC52E2E0AA8001D8C2F /* IconAssets */,
 			);
 			name = "WebRTC-MediaMTX";
 			packageProductDependencies = (
@@ -300,6 +308,8 @@
 				DEVELOPMENT_TEAM = F69A779SZU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Rpi Dashcam";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -329,6 +339,8 @@
 				DEVELOPMENT_TEAM = F69A779SZU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Rpi Dashcam";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
